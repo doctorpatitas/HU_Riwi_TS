@@ -2,7 +2,7 @@ import { Schema, model, Types } from 'mongoose';
 
 interface IClan {
     clan_name: string;
-    route: Types.ObjectId;
+    track: Types.ObjectId;
 }
 
 const clanSchema = new Schema<IClan>(
@@ -11,7 +11,7 @@ const clanSchema = new Schema<IClan>(
             type: String,
             required: true
         },
-        route: {
+        track: {
             type: Schema.Types.ObjectId,
             ref: 'Track'
         }

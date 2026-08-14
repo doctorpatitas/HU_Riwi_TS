@@ -1,9 +1,9 @@
 import express, { type Request, type Response} from 'express';
 import { Coder } from '../models/coder.model.js';
 
-const router = express.Router();
+const route = express.Router();
 
-router.post('/', async(req: Request, res: Response) => {
+route.post('/', async(req: Request, res: Response) => {
 
     try {
         const {coder_name, age, clan} = req.body;
@@ -18,16 +18,16 @@ router.post('/', async(req: Request, res: Response) => {
 
 });
 
-router.get('/:id', async(req: Request, res: Response) => {
+route.get('/:id', async(req: Request, res: Response) => {
 
     try {
-        const getCoder = await Coder.findById(req.params.id).populate('Clan');
+        const getCoder = await Coder.findById(req.params.id).populate('clan');
 
         if(!getCoder){
             return res.status(404).json({message: "Coder no encontrada"});
         }
 
-        res.status(201).json({message: "Coder encontrado con exito", getCoder});
+        res.status(200).json({message: "Coder encontrado con exito", getCoder});
         
     } catch (error) {
         console.log(error);
@@ -36,7 +36,7 @@ router.get('/:id', async(req: Request, res: Response) => {
 
 });
 
-router.put('/:id', async(req: Request, res: Response) => {
+route.put('/:id', async(req: Request, res: Response) => {
 
     try {
         const {coder_name, age, clan} = req.body;
@@ -59,3 +59,22 @@ router.put('/:id', async(req: Request, res: Response) => {
     }
 
 });
+
+route.delete('/:id', async(req: Request, res: Response) => {
+
+    try {
+        const deleteCoder = await Coder.findByIdAndDelete(req.params.id);
+
+        if(!deleteCoder){
+            return res.status(404).json({message: "Coder no encontrado"});
+        }
+
+        res.status(204).json({message: "El coder fue borrado con exito", deleteCoder});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message: "Ha ocurrido un error inesperado en el servidor"});
+    }
+
+});
+
+export default route;
