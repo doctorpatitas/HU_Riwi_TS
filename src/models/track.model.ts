@@ -1,13 +1,13 @@
 import { Schema, model, Types } from 'mongoose';
 
-interface Route {
-    route_name: string;
+interface ITrack {
+    track_name: string;
     tl: Types.ObjectId;
 }
 
-const routeSchema = new Schema<Route>(
+const trackSchema = new Schema<ITrack>(
     {
-        route_name: {
+        track_name: {
             type: String,
             required: true
         },
@@ -21,4 +21,4 @@ const routeSchema = new Schema<Route>(
     }
 );
 
-export const Route = model<Route>("Route", routeSchema);
+export const Track = model<ITrack>("Track", trackSchema);

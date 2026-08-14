@@ -10,6 +10,6 @@ app.use(express.json());
 app.listen(PORT, async() => {
     await ConnectDB();
 
-    console.log("Server running in", PORT);
+    console.log("Server running in port", PORT);
 });
 

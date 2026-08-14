@@ -1,12 +1,12 @@
 import { Schema, model, Types } from 'mongoose';
 
-interface Coder {
+interface ICoder {
     coder_name: string;
     age: number;
     clan: Types.ObjectId;
 }
 
-const coderSchema = new Schema<Coder>(
+const coderSchema = new Schema<ICoder>(
     {
         coder_name: {
             type: String,
@@ -26,4 +26,4 @@ const coderSchema = new Schema<Coder>(
     }
 );
 
-export const Coder = model<Coder>("Coder", coderSchema);
+export const Coder = model<ICoder>("Coder", coderSchema);

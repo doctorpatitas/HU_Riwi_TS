@@ -1,11 +1,11 @@
 import { Schema, model, Types } from 'mongoose';
 
-interface Clan {
+interface IClan {
     clan_name: string;
     route: Types.ObjectId;
 }
 
-const clanSchema = new Schema<Clan>(
+const clanSchema = new Schema<IClan>(
     {
         clan_name: {
             type: String,
@@ -13,7 +13,7 @@ const clanSchema = new Schema<Clan>(
         },
         route: {
             type: Schema.Types.ObjectId,
-            ref: 'Route'
+            ref: 'Track'
         }
     },
     {
@@ -21,4 +21,4 @@ const clanSchema = new Schema<Clan>(
     }
 );
 
-export const Clan = model<Clan>("Clan", clanSchema);
+export const Clan = model<IClan>("Clan", clanSchema);

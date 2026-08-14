@@ -1,13 +1,13 @@
 import { Schema, model } from 'mongoose';
 
-interface TL {
+interface ITL {
     tl_name: string;
     age: number;
     identification_number: number;
     route: 'AI'|'data science'|'Node with Nest.js'|'Angular'
 }
 
-const TLSchema = new Schema<TL>(
+const TLSchema = new Schema<ITL>(
     {
         tl_name: {
             type: String,
@@ -32,4 +32,4 @@ const TLSchema = new Schema<TL>(
     }
 );
 
-export const TL = model<TL>("TL", TLSchema);
+export const TL = model<ITL>("TL", TLSchema);
