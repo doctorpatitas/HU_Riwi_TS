@@ -18,6 +18,18 @@ route.post('/', async(req: Request, res: Response) => {
 
 });
 
+route.get('/', async(req: Request, res: Response) => {
+
+    try {
+        const getCoders = await Coder.find().populate('clan');
+
+        res.status(200).json({message: "Coders encontrados con exito", getCoders})
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message: "Ha ocurrido un error inesperado en el servidor"});
+    }
+});
+
 route.get('/:id', async(req: Request, res: Response) => {
 
     try {
