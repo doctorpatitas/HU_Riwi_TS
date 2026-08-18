@@ -4,6 +4,7 @@ import { validarIdMongo } from '../middlewares/idmongo.middleware.js';
 
 const route = express.Router();
 
+////Busca y entrega todas las rutas existentes
 route.get('/', async(req: Request, res: Response) => {
 
     try {
@@ -16,6 +17,7 @@ route.get('/', async(req: Request, res: Response) => {
     }
 });
 
+//Busca y entrega una ruta por id
 route.get('/:id', validarIdMongo, async(req: Request, res: Response) => {
 
     try {
