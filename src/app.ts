@@ -16,9 +16,18 @@ app.use('/track', trackRouter);
 app.use('/clan', clanRouter);
 app.use('/coder', coderRouter);
 
-app.listen(PORT, async() => {
+async function startServer() {
     await ConnectDB();
 
-    console.log("Server running in port", PORT);
-});
+    app.listen(PORT, () => {
+        console.log("Server running in port", PORT);
+    });
+}
+
+startServer();
+// app.listen(PORT, async() => {
+//     await ConnectDB();
+
+//     console.log("Server running in port", PORT);
+// });
 

@@ -1,9 +1,12 @@
 import express, { type Request, type Response} from 'express';
 import { Coder } from '../models/coder.model.js';
+import { validarCoder } from '../middlewares/coder.middleware.js';
+import { validarActualizarCoder } from '../middlewares/coder.middleware.js';
+import { validarIdMongo } from '../middlewares/idmongo.middleware.js';
 
 const route = express.Router();
 
-route.post('/', async(req: Request, res: Response) => {
+route.post('/', validarCoder, async(req: Request, res: Response) => {
 
     try {
         const {coder_name, age, clan} = req.body;
@@ -30,7 +33,7 @@ route.get('/', async(req: Request, res: Response) => {
     }
 });
 
-route.get('/:id', async(req: Request, res: Response) => {
+route.get('/:id', validarIdMongo, async(req: Request, res: Response) => {
 
     try {
         const getCoder = await Coder.findById(req.params.id).populate('clan');
@@ -48,7 +51,7 @@ route.get('/:id', async(req: Request, res: Response) => {
 
 });
 
-route.put('/:id', async(req: Request, res: Response) => {
+route.put('/:id', validarIdMongo, validarActualizarCoder, async(req: Request, res: Response) => {
 
     try {
         const {coder_name, age, clan} = req.body;
@@ -64,7 +67,7 @@ route.put('/:id', async(req: Request, res: Response) => {
             return res.status(404).json({message: "Tarea no encontrada"});
         }
 
-        res.status(201).json({message: "Coder actualizado con exito", updateCoder})
+        res.status(200).json({message: "Coder actualizado con exito", updateCoder})
     } catch (error) {
         console.log(error);
         res.status(500).json({message: "Ha ocurrido un error inesperado con el servidor"});
@@ -72,7 +75,7 @@ route.put('/:id', async(req: Request, res: Response) => {
 
 });
 
-route.delete('/:id', async(req: Request, res: Response) => {
+route.delete('/:id', validarIdMongo, async(req: Request, res: Response) => {
 
     try {
         const deleteCoder = await Coder.findByIdAndDelete(req.params.id);
@@ -81,7 +84,7 @@ route.delete('/:id', async(req: Request, res: Response) => {
             return res.status(404).json({message: "Coder no encontrado"});
         }
 
-        res.status(204).json({message: "El coder fue borrado con exito", deleteCoder});
+        res.status(200).json({message: "El coder fue borrado con exito", deleteCoder});
     } catch (error) {
         console.log(error);
         res.status(500).json({message: "Ha ocurrido un error inesperado en el servidor"});
