@@ -1,4 +1,4 @@
-import express, { Router, type Request, type Response} from 'express';
+import express, { type Request, type Response} from 'express';
 import { Coder } from '../models/coder.model.js';
 import { Clan } from '../models/clan.model.js';
 import { validarCoder } from '../middlewares/coder.middleware.js';
@@ -7,6 +7,41 @@ import { validarIdMongo } from '../middlewares/idmongo.middleware.js';
 
 const route = express.Router();
 
+/**
+ * @swagger
+ * /coder:
+ *   post:
+ *     summary: Crear un nuevo coder
+ *     tags:
+ *       - Coder
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - coder_name
+ *               - age
+ *               - clan
+ *             properties:
+ *               coder_name:
+ *                 type: string
+ *                 example: "Diego"
+ *               age:
+ *                 type: number
+ *                 example: 18
+ *               clan:
+ *                 type: string
+ *                 example: "64a1b2c6d4e5f6a7b8c9d0e1"
+ *     responses:
+ *       201:
+ *         description: Coder creado con éxito
+ *       400:
+ *         description: Datos inválidos
+ *       500:
+ *         description: Error inesperado del servidor
+ */
 //Crear coder nuevo
 route.post('/', validarCoder, async(req: Request, res: Response) => {
 
@@ -23,6 +58,25 @@ route.post('/', validarCoder, async(req: Request, res: Response) => {
 
 });
 
+/**
+ * @swagger
+ * /coder:
+ *   get:
+ *     summary: Listar todos los coders, incluyendo su clan
+ *     tags:
+ *       - Coder
+ *     responses:
+ *       200:
+ *         description: Lista de coders
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Coder'
+ *       500:
+ *         description: Error inesperado del servidor
+ */
 //Busca y entrega todos los coders existentes
 route.get('/', async(req: Request, res: Response) => {
 
@@ -36,7 +90,26 @@ route.get('/', async(req: Request, res: Response) => {
     }
 });
 
-route.get('/by-clan/:clanId', validarIdMongo, async(req: Request, res: Response) => {
+/**
+ * @swagger
+ * /coder/by-clan/{clanId}:
+ *   get:
+ *     summary: Listar los coders de un clan específico
+ *     tags:
+ *       - Coder
+ *     parameters:
+ *       - in: path
+ *         name: clanId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Coders del clan encontrados
+ *       500:
+ *         description: Error inesperado del servidor
+ */
+route.get('/by-clan/:clanId', async(req: Request, res: Response) => {
 
     try {
         const { clanId } = req.params;
@@ -55,6 +128,25 @@ route.get('/by-clan/:clanId', validarIdMongo, async(req: Request, res: Response)
 
 });
 
+/**
+ * @swagger
+ * /coder/by-track/{trackId}:
+ *   get:
+ *     summary: Listar los coders de un track específico
+ *     tags:
+ *       - Coder
+ *     parameters:
+ *       - in: path
+ *         name: trackId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Coders del track encontrados
+ *       500:
+ *         description: Error inesperado del servidor
+ */
 route.get('/by-track/:trackId', validarIdMongo, async(req: Request, res: Response) => {
 
     try {
@@ -78,6 +170,31 @@ route.get('/by-track/:trackId', validarIdMongo, async(req: Request, res: Respons
 
 });
 
+/**
+ * @swagger
+ * /coder/{id}:
+ *   get:
+ *     summary: Obtener un coder por su id, incluyendo su clan
+ *     tags:
+ *       - Coder
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Coder encontrado con éxito
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Coder'
+ *       404:
+ *         description: Coder no encontrado
+ *       500:
+ *         description: Error inesperado del servidor
+ */
 //Busca y entrega un coder por Id
 route.get('/:id', validarIdMongo, async(req: Request, res: Response) => {
 
@@ -85,7 +202,7 @@ route.get('/:id', validarIdMongo, async(req: Request, res: Response) => {
         const getCoder = await Coder.findById(req.params.id).populate('clan');
 
         if(!getCoder){
-            return res.status(404).json({message: "Coder no encontrada"});
+            return res.status(404).json({message: "Coder no encontrado"});
         }
 
         res.status(200).json({message: "Coder encontrado con exito", getCoder});
@@ -97,6 +214,40 @@ route.get('/:id', validarIdMongo, async(req: Request, res: Response) => {
 
 });
 
+/**
+ * @swagger
+ * /coder/{id}:
+ *   put:
+ *     summary: Actualizar un coder por su id
+ *     tags:
+ *       - Coder
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               coder_name:
+ *                 type: string
+ *               age:
+ *                 type: number
+ *               clan:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Coder actualizado con éxito
+ *       404:
+ *         description: Coder no encontrado
+ *       500:
+ *         description: Error inesperado del servidor
+ */
 //Actualiza un coder por Id
 route.put('/:id', validarIdMongo, validarActualizarCoder, async(req: Request, res: Response) => {
 
@@ -122,6 +273,27 @@ route.put('/:id', validarIdMongo, validarActualizarCoder, async(req: Request, re
 
 });
 
+/**
+ * @swagger
+ * /coder/{id}:
+ *   delete:
+ *     summary: Eliminar un coder por su id
+ *     tags:
+ *       - Coder
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Coder eliminado con éxito
+ *       404:
+ *         description: Coder no encontrado
+ *       500:
+ *         description: Error inesperado del servidor
+ */
 //Elimina un coder por id
 route.delete('/:id', validarIdMongo, async(req: Request, res: Response) => {
 
