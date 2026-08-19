@@ -109,7 +109,7 @@ route.get('/', async(req: Request, res: Response) => {
  *       500:
  *         description: Error inesperado del servidor
  */
-route.get('/by-clan/:clanId', async(req: Request, res: Response) => {
+route.get('/by-clan/:clanId', validarIdMongo, async(req: Request, res: Response) => {
 
     try {
         const { clanId } = req.params;
