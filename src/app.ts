@@ -7,6 +7,7 @@ import tlRouter from './routes/tl.routes.js';
 import trackRouter from './routes/track.routes.js';
 import clanRouter from './routes/clan.routes.js';
 import coderRouter from './routes/coder.routes.js';
+import authRouter from './routes/auth.routes.js';
 
 
 const {PORT} = process.env
@@ -20,6 +21,7 @@ app.use('/tl', tlRouter);
 app.use('/track', trackRouter);
 app.use('/clan', clanRouter);
 app.use('/coder', coderRouter);
+app.use('/auth', authRouter);
 
 async function startServer() {
     await ConnectDB();
